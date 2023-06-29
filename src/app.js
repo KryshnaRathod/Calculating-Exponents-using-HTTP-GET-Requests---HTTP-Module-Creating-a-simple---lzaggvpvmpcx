@@ -37,9 +37,14 @@ const server = http.createServer((req, res) => {
         res.end('Invalid payload. Expected a valid JSON.');
       }
     });
+  } else {
+    res.statusCode = 404;
+    res.setHeader('Content-Type', 'text/plain');
+    res.end('Invalid request method. Only POST requests are allowed.');
   }
 });
 
 module.exports = server;
+
 
       

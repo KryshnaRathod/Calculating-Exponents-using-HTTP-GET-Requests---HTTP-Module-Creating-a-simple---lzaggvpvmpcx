@@ -8,43 +8,26 @@ const server = http.createServer((req, res) => {
       const buf = Buffer.from(chunk);
       const str = buf.toString();
       chunks.push(str);
-    });
+      const obj = JSON.parse(chunks)
+      const value1 = obj.num1;
+      const value2 = obj.num2;
 
-    req.on('end', () => {
-      try {
-        const data = chunks.join('');
-        const obj = JSON.parse(data);
-        const num1 = obj.num1;
-        const num2 = obj.num2;
-
-        if (!Number.isInteger(num1) || num1 <= 0) {
-          res.statusCode = 404;
-          res.setHeader('Content-Type', 'text/plain');
-          res.end('The operation cannot be performed. "num1" must be a positive integer.');
-        } else if (!Number.isInteger(num2) || num2 < 0) {
-          res.statusCode = 400;
-          res.setHeader('Content-Type', 'text/plain');
-          res.end('Invalid input. "num2" must be a non-negative integer.');
-        } else {
-          const result = Math.pow(num1, num2);
-          res.statusCode = 200;
-          res.setHeader('Content-Type', 'text/plain');
-          res.end(`The result is ${result}`);
-        }
-      } catch (error) {
-        res.statusCode = 400;
-        res.setHeader('Content-Type', 'text/plain');
-        res.end('Invalid payload. Expected a valid JSON.');
+      // Write code here to calculate power of a number
+      if(isNaN(value1) || value1<=0 || isNaN(value2) || value2<0){
+        res.writeHead(404, {'Content-Type': 'text/plain'});
+        res.end('The operation cannot be performed')
       }
+      else{
+        res.writeHead(200, {'Content-Type': 'text/plain'});
+        res.end(`The result is ${value1**value2}`)
+      }
+      
     });
-  } else {
-    res.statusCode = 404;
-    res.setHeader('Content-Type', 'text/plain');
-    res.end('Invalid request method. Only POST requests are allowed.');
-  }
+    }
 });
 
 module.exports = server;
+      
 
 
       
